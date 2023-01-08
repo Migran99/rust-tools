@@ -108,9 +108,6 @@ mod csv{
                     self.apped_data(",");
                 }
             }
-
-
-
         }
 
 
