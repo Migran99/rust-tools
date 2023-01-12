@@ -10,7 +10,7 @@ pub struct CsvFile {
 }
 
 impl CsvFile {
-    fn getKeysTxt(file: &TextFile) -> Vec<String> {
+    fn get_keys_txt(file: &TextFile) -> Vec<String> {
         let s = file.content_string();
         let first_line = s.lines().next().unwrap();
         let res = first_line.split(",").collect::<Vec<&str>>();
@@ -22,7 +22,7 @@ impl CsvFile {
     pub fn new(filename: &String) -> CsvFile {
         let txt_file = TextFile::new(filename).unwrap();
         
-        let keys = CsvFile::getKeysTxt(&txt_file);
+        let keys = CsvFile::get_keys_txt(&txt_file);
         let mut keys_pair : Vec<(String, u32)> = [].to_vec();
         for (i,s) in keys.iter().enumerate(){
             keys_pair.push((s.clone(),u32::try_from(i).unwrap()));
@@ -32,8 +32,12 @@ impl CsvFile {
 
     }
 
-    pub fn getKeys(self) -> Vec<String>{
+    pub fn get_keys(&self) -> Vec<String>{
         self.keys.clone()
+    }
+
+    pub fn get_key_pairs(&self) -> Vec<(String, u32)> {
+        self.keys_pair.clone()
     }
 
 

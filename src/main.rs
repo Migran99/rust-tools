@@ -24,6 +24,9 @@ fn main() {
 
     let mycsv = CsvFile::new(filename);
 
-    let keys = mycsv.getKeys();
+    let keys = mycsv.get_keys();
     println!("{keys:?}");
+
+    let keys_pairs= mycsv.get_key_pairs();
+    println!("{keys_pairs:?}");
 }
