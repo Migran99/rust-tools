@@ -1,22 +1,17 @@
 use std::env;
 
-mod csv{
+mod text_file{
     use std::fs;
     use std::str;
-    pub struct  CsvFile {
+    pub struct  TextFile {
         name: String,
         data: Vec<u8>,
-        metadata: Metadata
-    }
-
-    struct Metadata {
-        item_number: u32,
     }
     
-    impl CsvFile {
+    impl TextFile {
 
         // UAX FUNCTIONS
-        fn load_csv(filename: &String) -> Result<Vec<u8>, &str>{
+        fn load(filename: &String) -> Result<Vec<u8>, &str>{
             /*
                 Load a csv file
             */
@@ -42,36 +37,16 @@ mod csv{
             let mut copy = data.clone();
             self.data.append(&mut copy);
         }
-        fn apped_data(&mut self, data: &str) {
-            self.apped_bytes(data.as_bytes().to_vec());
-
-        }
-
-        fn get_item_number(&self) -> u32 {
-            let content = self.content_string();
-            let header = content.lines().next().unwrap();
-
-            let header_items: Vec<&str> = header.split(',').collect(); 
-            
-            u32::try_from(header_items.len()).unwrap()
-        }
-
-        pub fn init(&mut self){
-            self.metadata.item_number = self.get_item_number();
-        }
 
         // +++++++++++++++++++++++
     
-        pub fn new(filename: &String) -> Result<CsvFile, &str>{
-            let data = match CsvFile::load_csv(&filename) {
+        pub fn new(filename: &String) -> Result<TextFile, &str>{
+            let data = match TextFile::load(&filename) {
                 Ok(data) => {data},
                 Err(e) => {return Err(e);},
             };
 
-            let mut file = CsvFile{name: filename.clone(), data: data, metadata: Metadata { item_number: 0 }};
-            file.init();
-
-
+            let file = TextFile{name: filename.clone(), data: data};
             Ok(file)
 
         }
@@ -87,27 +62,15 @@ mod csv{
             let content = self.content_string();
             println!("####################");
 
-            for (i,l) in content.lines().enumerate(){
-                if i == 0
-                    {println!("{}",l.to_uppercase());}
-                else
-                    {println!("{}",l);}
+            for (_i,l) in content.lines().enumerate(){
+                println!("{}",l);
             }
             println!("####################");
         }
 
-        pub fn add_line(&mut self, data: &mut [&str]) {
-            self.apped_data("\n");
+        pub fn apped_data(&mut self, data: &str) {
+            self.apped_bytes(data.as_bytes().to_vec());
 
-            for i in 0..self.metadata.item_number {
-                if i < self.metadata.item_number-1 {
-                    if i < data.len().try_into().unwrap() {
-                        let a = data[usize::try_from(i).unwrap()];
-                        self.apped_data(a);
-                    }
-                    self.apped_data(",");
-                }
-            }
         }
 
 
@@ -117,24 +80,20 @@ mod csv{
 }   
 
 fn main() {
-    use csv::CsvFile;
-    let arguments = env::args();
-    let mut filename: String = "test.csv".to_string();
-    for (index,argument) in arguments.enumerate(){
-        if index != 0{
-            println!("[{index}]{argument}");
-            filename = argument;
-        }
-    }
+    use text_file::TextFile;
+    let arguments: Vec<String> = env::args().collect();
 
-    let mut my_file = CsvFile::new(&filename).unwrap();
+    if arguments.len() != 2 {
+        println!("you need to give a filepath!!");
+        std::process::exit(0);
+    }
+    let filename = &arguments[1];
+    
+    let mut my_file = TextFile::new(filename).unwrap();
 
     println!("File {} size in Bytes: {}", my_file.name(), my_file.len());
 
     my_file.print_content();
-    my_file.add_line(&mut ["a"]);
-
+    my_file.apped_data("\nhello world");
     my_file.print_content();
-
-
 }
