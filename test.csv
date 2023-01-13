@@ -1,2 +1,4 @@
 name,value,id
-pc,100,0
+pc      ,100    ,0
+phone   ,600    ,1
+backpack,120    ,2
