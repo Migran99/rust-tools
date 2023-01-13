@@ -62,9 +62,9 @@ impl CsvFile {
     pub fn get_content(&self) -> Vec<Vec<String>> {
         self.content.clone()
     }
-    pub fn add_entry(&mut self, entry: Vec<String>) {
+    pub fn add_entry(&mut self, entry: &Vec<String>) {
         if entry.len() == self.keys.len() {
-            self.content.push(entry);
+            self.content.push(entry.clone());
         }
         else {
             println!("{}",format!("Not a valid entry. Make sure it has the same number of keys as the csv table!").warning())

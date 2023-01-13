@@ -36,8 +36,15 @@ fn main() {
     let content = mycsv.get_content();
     println!("{content:?}");
 
-    let new_content = ["example", "fail"].map(|i| i.to_string()).to_vec();
-    mycsv.add_entry(new_content);
+    let mut new_content = ["example", "0"].map(|i| i.to_string()).to_vec();
+    mycsv.add_entry(&new_content); // Invalid
+    let content = mycsv.get_content();
+    println!("{content:?}");
+
+    new_content.push("3".to_string());
+    mycsv.add_entry(&new_content); // Valid
+    let content = mycsv.get_content();
+    println!("{content:?}");
 
     println!("{}",format!("Done!").valid())
 }
