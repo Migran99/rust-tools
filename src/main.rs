@@ -25,7 +25,7 @@ fn main() {
 
     use csv_file::CsvFile;
 
-    let mut mycsv = CsvFile::new(filename);
+    let mut mycsv = CsvFile::new(filename, None);
 
     let keys = mycsv.get_keys();
     println!("{keys:?}");
@@ -33,18 +33,31 @@ fn main() {
     let keys_pairs= mycsv.get_key_pairs();
     println!("{keys_pairs:?}");
 
-    let content = mycsv.get_content();
-    println!("{content:?}");
+    mycsv.display();
 
     let mut new_content = ["example", "0"].map(|i| i.to_string()).to_vec();
     mycsv.add_entry(&new_content); // Invalid
-    let content = mycsv.get_content();
-    println!("{content:?}");
+    mycsv.display();
+
+    mycsv.set_name("Table A");
 
     new_content.push("3".to_string());
     mycsv.add_entry(&new_content); // Valid
-    let content = mycsv.get_content();
-    println!("{content:?}");
+    mycsv.display();
+
+    mycsv.add_key("new_key");
+    mycsv.display();
+
+    mycsv.add_key("new_key");
+    mycsv.display();
+
+    let keys_pairs= mycsv.get_key_pairs();
+    println!("{keys_pairs:?}");
+
+    mycsv.set_key_value("new_key", 2, "test");
+
+    mycsv.display();
+
 
     println!("{}",format!("Done!").valid())
 }

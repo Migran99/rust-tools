@@ -9,7 +9,7 @@ impl Formatting for String {
         format!("\x1b[93m{}\x1b[0m", self.clone())
     }
     fn error(&self) -> String{
-        format!("\x1b[91{}\x1b[0m", self.clone())
+        format!("\x1b[91m{}\x1b[0m", self.clone())
     }
     fn valid(&self) -> String{
         format!("\x1b[92m{}\x1b[0m", self.clone())
