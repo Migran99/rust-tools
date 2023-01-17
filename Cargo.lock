@@ -3,5 +3,26 @@
 version = 3
 
 [[package]]
-name = "text_files"
+name = "csv_file"
+version = "0.1.0"
+dependencies = [
+ "formatting",
+ "text_file",
+]
+
+[[package]]
+name = "formatting"
+version = "0.1.0"
+
+[[package]]
+name = "rust_tools"
+version = "0.1.0"
+dependencies = [
+ "csv_file",
+ "formatting",
+ "text_file",
+]
+
+[[package]]
+name = "text_file"
 version = "0.1.0"

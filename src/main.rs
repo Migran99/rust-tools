@@ -1,12 +1,10 @@
 use std::env;
 
-use crate::formatting::Formatting;
-mod text_file;
-mod csv_file;
-mod formatting;   
+use csv_file::CsvFile;
+use formatting::Formatting;
+use text_file;
 
 fn main() {
-    use text_file::TextFile;
     let arguments: Vec<String> = env::args().collect();
 
     if arguments.len() != 2 {
@@ -15,15 +13,13 @@ fn main() {
     }
     let filename = &arguments[1];
     
-    let mut my_file = TextFile::new(filename).unwrap();
+    let mut my_file = text_file::TextFile::new(filename).unwrap();
 
     println!("File {} size in Bytes: {}", my_file.name(), my_file.len());
 
     my_file.print_content();
     my_file.apped_data("\nhello world");
     my_file.print_content();
-
-    use csv_file::CsvFile;
 
     let mut mycsv = CsvFile::new(filename, None);
 
