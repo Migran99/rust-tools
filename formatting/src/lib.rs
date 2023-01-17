@@ -1,10 +1,10 @@
-pub trait Formatting {
-    fn warning(&self) -> String;
-    fn error(&self) -> String;
-    fn valid(&self) -> String;
+pub trait Formatting<T> {
+    fn warning(&self) -> T;
+    fn error(&self) -> T;
+    fn valid(&self) -> T;
 }
 
-impl Formatting for String {
+impl Formatting<String> for String {
     fn warning(&self) -> String{
         format!("\x1b[93m{}\x1b[0m", self.clone())
     }
