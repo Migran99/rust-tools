@@ -4,9 +4,9 @@ use formatting::Formatting;
 use std::net::TcpStream;
 use std::fs::File;
 
-use std::io::{Read, Write, Result};
+use std::io::{copy};
 
-fn main() -> Result<()>{
+fn main(){
     let arguments: Vec<String> = env::args().collect();
 
     if arguments.len() != 3 {
@@ -17,20 +17,10 @@ fn main() -> Result<()>{
     let ip_port = &arguments[2];
 
     let mut myfile = File::open(filename).unwrap();
-    let mut tcp_connection = TcpStream::connect(ip_port)?;
+    let mut tcp_connection = TcpStream::connect(ip_port).unwrap();
 
-    let mut buf = [0; 4096];
-    loop {
-        let n = myfile.read(&mut buf)?;
-        
-        if n == 0 {
-            // reached end of file
-            break;
-        }
-        
-        tcp_connection.write_all(&buf[..n])?;
-    }
-    
-    Ok(())
+    let n = copy(&mut myfile, &mut tcp_connection).unwrap();
+
+    print!("{} bytes sent!", format!("{}",n).valid());
 
 }

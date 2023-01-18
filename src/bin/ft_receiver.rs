@@ -8,9 +8,7 @@ use std::net::TcpStream;
 use std::net::TcpListener;
 use std::fs::File;
 
-use std::io::{Result};
-
-fn main() -> Result<()>{
+fn main(){
     let arguments: Vec<String> = env::args().collect();
 
     if arguments.len() != 3 {
@@ -52,7 +50,6 @@ fn main() -> Result<()>{
     let m = io::copy(&mut client, &mut myfile).unwrap();
     print!("{} bytes written!", format!("{}",m).valid());
     
-    
-    Ok(())
+
 
 }
