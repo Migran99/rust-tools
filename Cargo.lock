@@ -3,6 +3,10 @@
 version = 3
 
 [[package]]
+name = "argument_parser"
+version = "0.1.0"
+
+[[package]]
 name = "csv_file"
 version = "0.1.0"
 dependencies = [
@@ -18,6 +22,7 @@ version = "0.1.0"
 name = "rust_tools"
 version = "0.1.0"
 dependencies = [
+ "argument_parser",
  "csv_file",
  "formatting",
  "text_file",
