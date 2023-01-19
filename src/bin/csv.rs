@@ -1,5 +1,3 @@
-use std::env;
-
 use csv_file::CsvFile;
 use formatting::Formatting;
 use text_file;
