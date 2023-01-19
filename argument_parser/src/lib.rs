@@ -1,11 +1,53 @@
-use std::{env};
+use std::{env, fmt::Debug};
+
+pub trait ContentStringConversion {
+    fn from_string(txt: &String) -> Option<Self> where Self: Sized;
+    // fn to_string(&self) -> String;
+}
+
+impl ContentStringConversion for String {
+    fn from_string(txt: &String) -> Option<String> {
+        Some(txt.clone())
+    }
+    // fn to_string(&self) -> String {
+    //     self.clone()
+    // }
+}
+impl ContentStringConversion for i32 {
+    fn from_string(txt: &String) -> Option<i32> {
+        txt.parse::<i32>().ok()
+    }
+    // fn to_string(&self) -> String {
+    //     format!("{self}")
+    // }
+}
+impl ContentStringConversion for u32 {
+    fn from_string(txt: &String) -> Option<u32> {
+        txt.parse::<u32>().ok()
+    }
+    // fn to_string(&self) -> String {
+    //     format!("{self}")
+    // }
+}
+impl ContentStringConversion for bool {
+    fn from_string(txt: &String) -> Option<bool> {
+        txt.parse::<bool>().ok()
+    }
+    // fn to_string(&self) -> String {
+    //     format!("{self}")
+    // }
+}
+
+
+// TODO
+// - Add default value
+// - Add mandatory arguments
 
 // Supported types
 #[derive(Clone)]
 #[derive(Debug)]
 #[derive(PartialEq)]
-enum Contents {
-    Char(char),
+pub enum Contents {
     Int(i32),
     Uint(u32),
     String(String),
@@ -14,20 +56,22 @@ enum Contents {
 impl Contents {
     pub fn get_value_str(&self) -> String{
         match self {
-            Contents::Bool(c) => format!("{c}"),
-            Contents::Char(c) => format!("{c}"),
-            Contents::Int(c) => format!("{c}"),
-            Contents::Uint(c) => format!("{c}"),
-            Contents::String(c) => c.clone(),
-
+            Contents::Bool(c) => c.to_string(),
+            Contents::Int(c) => c.to_string(),
+            Contents::Uint(c) => c.to_string(),
+            Contents::String(c) => c.to_string(),
         }
+    }
+
+    pub fn get_value<T: ContentStringConversion>(&self) -> Option<T> {
+        let text = self.get_value_str();
+        T::from_string(&text)
     }
 }
 #[derive(Debug)]
 #[derive(Clone)]
 #[derive(PartialEq)]
 pub enum ContentsTypes {
-    Char,
     Int,
     Uint,
     String,
@@ -40,6 +84,12 @@ struct Argument {
     data_type: ContentsTypes,
     data: Option<Contents>,
     options: Vec<String>,
+}
+impl Argument {
+    pub fn get_data(&self) -> Option<Contents>{
+        self.data.clone()
+    }
+    
 }
 
 pub struct ArgumentParser {
@@ -88,15 +138,6 @@ impl ArgumentParser {
 
     fn parse_value(text: &String, type_ : &ContentsTypes) -> Option<Contents> {
         let res: Option<Contents> = match type_ {
-            ContentsTypes::Char => {
-                let parsed = ArgumentParser::parse_text::<char>(text);
-                if let Some(c) = parsed{
-                    return Some(Contents::Char(c));
-                }
-                else {
-                    return None;
-                }
-            },
             ContentsTypes::Int => {
                 let parsed = ArgumentParser::parse_text::<i32>(text);
                 if let Some(c) = parsed{
@@ -153,6 +194,20 @@ impl ArgumentParser {
                     }
                 }
             }
+        }
+    }
+
+    pub fn get_value<T: ContentStringConversion>(&self, arg: &str) -> Option<T>{
+        let mut ret: Option<Contents> = None;
+        for a in self.arguments.iter() {
+            if &a.name == arg {
+                ret = a.get_data();
+            }
+        }
+
+        match ret {
+            Some(c) => c.get_value::<T>(),
+            None => None
         }
     }
 
