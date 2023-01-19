@@ -1,6 +1,7 @@
 use std::{env, fmt::Debug};
 use formatting::Formatting;
 
+#[allow(non_snake_case)]
 pub mod ArgumentOptions {
     pub const STORE_TRUE: &str = "STORE_TRUE";
     pub const STORE_FALSE: &str = "STORE_FALSE";
