@@ -1,4 +1,11 @@
 use std::{env, fmt::Debug};
+use formatting::Formatting;
+
+pub mod ArgumentOptions {
+    pub const STORE_TRUE: &str = "STORE_TRUE";
+    pub const STORE_FALSE: &str = "STORE_FALSE";
+    pub const NECESSARY: &str = "NECESSARY";
+}
 
 pub trait ContentStringConversion {
     fn from_string(txt: &String) -> Option<Self> where Self: Sized;
@@ -89,6 +96,9 @@ impl Argument {
     pub fn get_data(&self) -> Option<Contents>{
         self.data.clone()
     }
+    pub fn has_option(&self, option: &str) -> bool {
+        self.options.iter().any(|f| f == option)
+    }
     
 }
 
@@ -104,15 +114,15 @@ impl ArgumentParser {
     }
 
     // Arguments functions
-    pub fn add_argument(&mut self, name: &str, data_type: ContentsTypes ,options_: Option<Vec<&str>>) {
-        let mut data: Option<Contents> = None;
+    pub fn add_argument(&mut self, name: &str, data_type: ContentsTypes ,options_: Option<Vec<&str>>, default_value: Option<Contents>) {
+        let mut data: Option<Contents> = default_value;
         if let Some(opt) = &options_ {
             if data_type == ContentsTypes::Bool
             {
-                    if opt.iter().any(|&f| f == "store-true"){
+                    if opt.iter().any(|&f| f == ArgumentOptions::STORE_TRUE){
                     data = Some(Contents::Bool(false));
                 }
-                else if opt.iter().any(|&f| f == "store-false") {
+                else if opt.iter().any(|&f| f == ArgumentOptions::STORE_FALSE) {
                     data = Some(Contents::Bool(true));
                 }
             }
@@ -181,10 +191,10 @@ impl ArgumentParser {
                     // Get value
                     used_arguments[i] = true;
 
-                    if opt.options.iter().any(|f| f == "store-true") && opt.data_type == ContentsTypes::Bool{
+                    if opt.has_option(ArgumentOptions::STORE_TRUE) && opt.data_type == ContentsTypes::Bool{
                         opt.data = Some(Contents::Bool(true));
                     }
-                    else if opt.options.iter().any(|f| f == "store-false") && opt.data_type == ContentsTypes::Bool {
+                    else if opt.has_option(ArgumentOptions::STORE_FALSE) && opt.data_type == ContentsTypes::Bool {
                         opt.data = Some(Contents::Bool(false));
                     }
                     else {
@@ -192,6 +202,10 @@ impl ArgumentParser {
                         opt.data = data;
                         used_arguments[i+1] = true;
                     }
+                }
+                else if i == arguments.len() - 1 && opt.has_option(ArgumentOptions::NECESSARY){
+                    println!("{}", format!("Necessary argument '{}' is not present", opt.name).error());
+                    panic!();
                 }
             }
         }
