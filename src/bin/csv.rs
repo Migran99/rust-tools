@@ -4,16 +4,28 @@ use csv_file::CsvFile;
 use formatting::Formatting;
 use text_file;
 
-fn main() {
-    let arguments: Vec<String> = env::args().collect();
+use argument_parser::{ArgumentOptions, ArgumentParser, ContentsTypes};
 
-    if arguments.len() != 2 {
-        println!("{}",String::from("you need to give a filepath!!").error());
-        std::process::exit(0);
-    }
-    let filename = &arguments[1];
+fn main() {
+
+    // Arguments configuration
+    let mut parser = ArgumentParser::new();
+
+    parser.add_argument("path", ContentsTypes::String, 
+                Some(vec![ArgumentOptions::NECESSARY]), None);
+    parser.parse_arguments();
+
+    let filename = match parser.get_value::<String>("path") {
+        Some(f) => f,
+        None => {
+            println!("{}",String::from("you need to give a filepath!!").error());
+            std::process::exit(0);
+        }
+    };
+
+    // CSV Example
     
-    let mut my_file = text_file::TextFile::new(filename).unwrap();
+    let mut my_file = text_file::TextFile::new(&filename).unwrap();
 
     println!("File {} size in Bytes: {}", my_file.name(), my_file.len());
 
@@ -21,7 +33,7 @@ fn main() {
     my_file.apped_data("\nhello world");
     my_file.print_content();
 
-    let mut mycsv = CsvFile::new(filename, None);
+    let mut mycsv = CsvFile::new(&filename, None);
 
     let keys = mycsv.get_keys();
     println!("{keys:?}");
