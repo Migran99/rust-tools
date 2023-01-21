@@ -47,10 +47,6 @@ impl ContentStringConversion for bool {
 }
 
 
-// TODO
-// - Add default value
-// - Add mandatory arguments
-
 // Supported types
 #[derive(Clone)]
 #[derive(Debug)]
