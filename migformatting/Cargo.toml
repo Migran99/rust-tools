@@ -1,7 +1,11 @@
 [package]
 name = "migformatting"
 version = "0.1.0"
-edition = "2021"
+edition = "2023"
+authors = ["Miguel Granero"]
+description = "Simple string formatter"
+license = "BSD-3-Clause"
+keywords = ["string", "format", "formatting"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -1,7 +1,7 @@
 [package]
 name = "migparser"
 version = "0.1.0"
-edition = "2021"
+edition = "2023"
 authors = ["Miguel Granero"]
 description = "Simple argument parser for small applications"
 license = "BSD-3-Clause"
