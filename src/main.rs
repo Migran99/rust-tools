@@ -1,4 +1,4 @@
-use formatting::Formatting;
+use migformatting::Formatting;
 
 fn main() {
     println!("{}{}", format!("EXECUTE ONE OF THE TESTS WITH: ").error(), format!("cargo run --bin <test>").warning());

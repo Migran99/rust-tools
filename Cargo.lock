@@ -6,13 +6,9 @@ version = 3
 name = "csv_file"
 version = "0.1.0"
 dependencies = [
- "formatting",
+ "migformatting",
  "text_file",
 ]
-
-[[package]]
-name = "formatting"
-version = "0.1.0"
 
 [[package]]
 name = "heck"
@@ -21,10 +17,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2540771e65fc8cb83cd6e8a237f70c319bd5c29f78ed1084ba5d50eeac86f7f9"
 
 [[package]]
+name = "migformatting"
+version = "0.1.0"
+
+[[package]]
 name = "migparser"
 version = "0.1.0"
 dependencies = [
- "formatting",
+ "migformatting",
  "strum",
  "strum_macros",
 ]
@@ -52,7 +52,7 @@ name = "rust_tools"
 version = "0.1.0"
 dependencies = [
  "csv_file",
- "formatting",
+ "migformatting",
  "migparser",
  "text_file",
 ]

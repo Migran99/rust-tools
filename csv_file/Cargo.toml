@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 text_file = { path = "../text_file" }
-formatting = { path = "../formatting" }
+migformatting = { path = "../migformatting" }

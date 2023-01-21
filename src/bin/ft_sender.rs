@@ -1,5 +1,5 @@
 use std::env;
-use formatting::Formatting;
+use migformatting::Formatting;
 
 use std::net::TcpStream;
 use std::fs::File;

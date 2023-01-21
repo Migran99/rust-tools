@@ -1,5 +1,5 @@
 use std::{env, fmt::Debug};
-use formatting::Formatting;
+use migformatting::Formatting;
 
 #[allow(non_snake_case)]
 pub mod ArgumentOptions {

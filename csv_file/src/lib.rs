@@ -1,6 +1,6 @@
 use std::str;
 use text_file::TextFile;
-use formatting::Formatting;
+use migformatting::Formatting;
 
 pub struct CsvFile { 
     name: String,

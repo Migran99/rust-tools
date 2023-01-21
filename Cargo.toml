@@ -9,5 +9,5 @@ default-run = "rust_tools"
 [dependencies]
 text_file = { path = "./text_file" }
 csv_file = { path = "./csv_file" }
-formatting = { path = "./formatting" }
+migformatting = { path = "./migformatting" }
 migparser = { path = "./migparser" }

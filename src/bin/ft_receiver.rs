@@ -2,7 +2,7 @@ use std::env;
 use std::io;
 use std::thread::sleep;
 use std::time;
-use formatting::Formatting;
+use migformatting::Formatting;
 
 use std::net::TcpStream;
 use std::net::TcpListener;

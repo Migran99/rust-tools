@@ -12,4 +12,4 @@ keywords = ["argument", "arg", "parser"]
 [dependencies]
 strum = "0.24"
 strum_macros = "0.24"
-formatting = {path = "../formatting"}
+migformatting = {path = "../migformatting"}

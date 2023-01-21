@@ -1,5 +1,5 @@
 use csv_file::CsvFile;
-use formatting::Formatting;
+use migformatting::Formatting;
 use text_file;
 
 use migparser::{ArgumentOptions, ArgumentParser, ContentsTypes};
