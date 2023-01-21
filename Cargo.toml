@@ -10,4 +10,4 @@ default-run = "rust_tools"
 text_file = { path = "./text_file" }
 csv_file = { path = "./csv_file" }
 formatting = { path = "./formatting" }
-argument_parser = { path = "./argument_parser" }
+migparser = { path = "./migparser" }

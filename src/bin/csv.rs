@@ -2,7 +2,7 @@ use csv_file::CsvFile;
 use formatting::Formatting;
 use text_file;
 
-use argument_parser::{ArgumentOptions, ArgumentParser, ContentsTypes};
+use migparser::{ArgumentOptions, ArgumentParser, ContentsTypes};
 
 fn main() {
 

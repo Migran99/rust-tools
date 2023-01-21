@@ -1,6 +1,6 @@
-use argument_parser::ArgumentParser;
-use argument_parser::ContentsTypes;
-use argument_parser::ArgumentOptions;
+use migparser::ArgumentParser;
+use migparser::ContentsTypes;
+use migparser::ArgumentOptions;
 
 fn main () {
     let mut parser = ArgumentParser::new();
