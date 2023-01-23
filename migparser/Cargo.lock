@@ -3,22 +3,10 @@
 version = 3
 
 [[package]]
-name = "csv_file"
-version = "0.1.0"
-dependencies = [
- "migformatting 0.1.0",
- "text_file",
-]
-
-[[package]]
 name = "heck"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2540771e65fc8cb83cd6e8a237f70c319bd5c29f78ed1084ba5d50eeac86f7f9"
-
-[[package]]
-name = "migformatting"
-version = "0.1.0"
 
 [[package]]
 name = "migformatting"
@@ -29,10 +17,8 @@ checksum = "58913d46564f873c62d89207f8d862a482b6a871aca2850bf0ed134879781aa2"
 [[package]]
 name = "migparser"
 version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4bbc637312205ce31887ce5c1a60eb4dacf88bffd3419502030e1e1e71d7ca8c"
 dependencies = [
- "migformatting 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "migformatting",
  "strum",
  "strum_macros",
 ]
@@ -53,16 +39,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8856d8364d252a14d474036ea1358d63c9e6965c8e5c1885c18f73d70bff9c7b"
 dependencies = [
  "proc-macro2",
-]
-
-[[package]]
-name = "rust_tools"
-version = "0.1.0"
-dependencies = [
- "csv_file",
- "migformatting 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "migparser",
- "text_file",
 ]
 
 [[package]]
@@ -100,10 +76,6 @@ dependencies = [
  "quote",
  "unicode-ident",
 ]
-
-[[package]]
-name = "text_file"
-version = "0.1.0"
 
 [[package]]
 name = "unicode-ident"
