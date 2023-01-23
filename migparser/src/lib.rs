@@ -3,9 +3,9 @@ use migformatting::Formatting;
 
 #[allow(non_snake_case)]
 pub mod ArgumentOptions {
-    static STORE_TRUE: &str = "STORE_TRUE";
-    static STORE_FALSE: &str = "STORE_FALSE";
-    static NECESSARY: &str = "NECESSARY";
+    pub static STORE_TRUE: &str = "STORE_TRUE";
+    pub static STORE_FALSE: &str = "STORE_FALSE";
+    pub static NECESSARY: &str = "NECESSARY";
 }
 
 pub trait ContentStringConversion {
