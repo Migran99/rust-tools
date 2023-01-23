@@ -88,6 +88,7 @@ struct Argument {
     data_type: ContentsTypes,
     data: Option<Contents>,
     options: Vec<String>,
+    parsed: bool
 }
 impl Argument {
     pub fn get_data(&self) -> Option<Contents>{
@@ -95,6 +96,13 @@ impl Argument {
     }
     pub fn has_option(&self, option: &str) -> bool {
         self.options.iter().any(|f| f == option)
+    }
+    pub fn is_parsed(&self) -> bool{
+        self.parsed.clone()
+    }
+
+    pub fn set_parsed(&mut self) {
+        self.parsed = true;
     }
     
 }
@@ -131,7 +139,8 @@ impl ArgumentParser {
             options: match options_ {
                 Some(c) => c.iter().map(|&f| String::from(f)).collect(),
                 None => vec![]
-            }
+            },
+            parsed: false
         });
     }
 
@@ -199,11 +208,13 @@ impl ArgumentParser {
                         opt.data = data;
                         used_arguments[i+1] = true;
                     }
+
+                    opt.set_parsed();
                 }
-                else if i == arguments.len() - 1 && opt.has_option(ArgumentOptions::NECESSARY){
-                    println!("{}", format!("Necessary argument '{}' is not present", opt.name).error());
-                    panic!();
-                }
+            }
+            if !opt.is_parsed() && opt.has_option(ArgumentOptions::NECESSARY) {
+                println!("{}", format!("Necessary argument '{}' is not present", opt.name).error());
+                panic!();
             }
         }
     }

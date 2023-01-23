@@ -13,6 +13,6 @@ fn main () {
     parser.parse_arguments();
     parser.print_data();
 
-    let name = parser.get_value::<String>("name").unwrap();
+    let name : String = parser.get_value("name").unwrap();
     println!("The name is {name}");
 }
