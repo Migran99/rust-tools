@@ -8,42 +8,82 @@ pub mod ArgumentOptions {
     pub static NECESSARY: &str = "NECESSARY";
 }
 
-pub trait ContentStringConversion {
-    fn from_string(txt: &String) -> Option<Self> where Self: Sized;
-    // fn to_string(&self) -> String;
+// pub trait ContentStringConversion {
+//     fn from_string(txt: &String) -> Option<Self> where Self: Sized;
+//     // fn to_string(&self) -> String;
+// }
+
+// impl ContentStringConversion for String {
+//     fn from_string(txt: &String) -> Option<String> {
+//         Some(txt.clone())
+//     }
+//     // fn to_string(&self) -> String {
+//     //     self.clone()
+//     // }
+// }
+// impl ContentStringConversion for i32 {
+//     fn from_string(txt: &String) -> Option<i32> {
+//         txt.parse::<i32>().ok()
+//     }
+//     // fn to_string(&self) -> String {
+//     //     format!("{self}")
+//     // }
+// }
+// impl ContentStringConversion for u32 {
+//     fn from_string(txt: &String) -> Option<u32> {
+//         txt.parse::<u32>().ok()
+//     }
+//     // fn to_string(&self) -> String {
+//     //     format!("{self}")
+//     // }
+// }
+// impl ContentStringConversion for bool {
+//     fn from_string(txt: &String) -> Option<bool> {
+//         txt.parse::<bool>().ok()
+//     }
+//     // fn to_string(&self) -> String {
+//     //     format!("{self}")
+//     // }
+// }
+
+pub trait ExtractFromContents {
+    fn extract(object: &Contents) -> Option<Self> where Self: Sized;
 }
 
-impl ContentStringConversion for String {
-    fn from_string(txt: &String) -> Option<String> {
-        Some(txt.clone())
+impl ExtractFromContents for i32 {
+    fn extract(object: &Contents) -> Option<Self> {
+        match object {
+            Contents::Int(i) => {Some(i.to_owned())},
+            _ => None
+        }
     }
-    // fn to_string(&self) -> String {
-    //     self.clone()
-    // }
 }
-impl ContentStringConversion for i32 {
-    fn from_string(txt: &String) -> Option<i32> {
-        txt.parse::<i32>().ok()
+
+impl ExtractFromContents for bool {
+    fn extract(object: &Contents) -> Option<Self> {
+        match object {
+            Contents::Bool(i) => {Some(i.to_owned())},
+            _ => None
+        }
     }
-    // fn to_string(&self) -> String {
-    //     format!("{self}")
-    // }
 }
-impl ContentStringConversion for u32 {
-    fn from_string(txt: &String) -> Option<u32> {
-        txt.parse::<u32>().ok()
+
+impl ExtractFromContents for u32 {
+    fn extract(object: &Contents) -> Option<Self> {
+        match object {
+            Contents::Uint(i) => {Some(i.to_owned())},
+            _ => None
+        }
     }
-    // fn to_string(&self) -> String {
-    //     format!("{self}")
-    // }
 }
-impl ContentStringConversion for bool {
-    fn from_string(txt: &String) -> Option<bool> {
-        txt.parse::<bool>().ok()
+
+impl ExtractFromContents for String {
+    fn extract(object: &Contents) -> Option<Self> {
+        match object {
+            Contents::String(i) => {Some(i.to_owned())},
+            _ => None
+        }
     }
-    // fn to_string(&self) -> String {
-    //     format!("{self}")
-    // }
 }
 
 
@@ -66,10 +106,8 @@ impl Contents {
             Contents::String(c) => c.to_string(),
         }
     }
-
-    pub fn get_value<T: ContentStringConversion>(&self) -> Option<T> {
-        let text = self.get_value_str();
-        T::from_string(&text)
+    pub fn get_value<T: ExtractFromContents>(&self) -> Option<T> {
+        T::extract(self)
     }
 }
 #[derive(Debug)]
@@ -219,7 +257,7 @@ impl ArgumentParser {
         }
     }
 
-    pub fn get_value<T: ContentStringConversion>(&self, arg: &str) -> Option<T>{
+    pub fn get_value<T: ExtractFromContents>(&self, arg: &str) -> Option<T>{
         let mut ret: Option<Contents> = None;
         for a in self.arguments.iter() {
             if &a.name == arg {
@@ -228,7 +266,7 @@ impl ArgumentParser {
         }
 
         match ret {
-            Some(c) => c.get_value::<T>(),
+            Some(c) => c.get_value(),
             None => None
         }
     }

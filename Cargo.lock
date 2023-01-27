@@ -29,8 +29,6 @@ checksum = "58913d46564f873c62d89207f8d862a482b6a871aca2850bf0ed134879781aa2"
 [[package]]
 name = "migparser"
 version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4bbc637312205ce31887ce5c1a60eb4dacf88bffd3419502030e1e1e71d7ca8c"
 dependencies = [
  "migformatting 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "strum",

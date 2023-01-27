@@ -3,6 +3,9 @@ name = "rust_tools"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = ["csv_file", "migformatting", "migparser", "text_file"]
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 default-run = "rust_tools"
 
@@ -10,4 +13,4 @@ default-run = "rust_tools"
 text_file = { path = "./text_file" }
 csv_file = { path = "./csv_file" }
 migformatting = "0.1.0"
-migparser = "0.1.2"
+migparser = { path = "./migparser"}
