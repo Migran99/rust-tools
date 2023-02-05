@@ -42,7 +42,7 @@ impl Argument {
         let is_flag = name.starts_with("-");
 
         if is_flag {
-            return Some(ArgumentType::Flag);
+            return Some(ArgumentType::Optional);
         }
         else {
             return Some(ArgumentType::Postional);
@@ -71,5 +71,5 @@ impl Argument {
 
 pub enum ArgumentType {
     Postional,
-    Flag,    
+    Optional,    
 }

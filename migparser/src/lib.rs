@@ -37,7 +37,7 @@ impl ArgumentParser {
         match argument_type {
             Some(t) => {
                 match t {
-                    ArgumentType::Flag => {
+                    ArgumentType::Optional => {
                         // Do nothing
                     },
                     ArgumentType::Postional => {
