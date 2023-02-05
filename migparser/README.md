@@ -13,12 +13,12 @@ fn main () {
     // The "--" prefix makes it optional.
     parser.add_argument("--number", ContentsTypes::Int, None, None);
 
-    // No prefix means necessary default.
+    // No prefix means necessary by default.
     parser.add_argument("name", ContentsTypes::String, None, None);
 
     // Options used to make it necessary and have the store-true 
     // behaviour.
-    parser.add_argument("flag", ContentsTypes::Bool, 
+    parser.add_argument("--flag", ContentsTypes::Bool, 
             Some(vec![ArgumentOptions::STORE_TRUE, ArgumentOptions::NECESSARY]), None);
     parser.print_data();    
 
