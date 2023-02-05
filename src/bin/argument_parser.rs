@@ -6,7 +6,7 @@ fn main () {
     let mut parser = ArgumentParser::new();
 
     parser.add_argument("name", ContentsTypes::String, None, None);
-    parser.add_argument("number", ContentsTypes::Int, None, None);
+    parser.add_argument("--number", ContentsTypes::Int, None, None);
     parser.add_argument("flag", ContentsTypes::Bool, 
             Some(vec![ArgumentOptions::STORE_TRUE, ArgumentOptions::NECESSARY]), None);
     parser.print_data();    
@@ -17,6 +17,9 @@ fn main () {
     let name : String = parser.get_value("name").unwrap();
     println!("The name is {name}");
 
-    let number : i32 = parser.get_value("number").unwrap();
-    println!("The number is {number}");
+    match parser.get_value::<i32>("number") {
+        Some(i) => {println!("The number is {i}");},
+        None => {},
+    }
+    
 }

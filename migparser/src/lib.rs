@@ -3,7 +3,7 @@ use migformatting::Formatting;
 
 mod argument;
 pub use argument::{ContentsTypes, ExtractFromContents, ArgumentOptions, Argument};
-use argument::Contents;
+use argument::{Contents, ArgumentType};
 
 pub struct ArgumentParser {
     arguments: Vec<Argument>,
@@ -19,25 +19,49 @@ impl ArgumentParser {
     // Arguments functions
     pub fn add_argument(&mut self, name: &str, data_type: ContentsTypes ,options_: Option<Vec<&str>>, default_value: Option<Contents>) {
         let mut data: Option<Contents> = default_value;
-        if let Some(opt) = &options_ {
-            if data_type == ContentsTypes::Bool
-            {
-                    if opt.iter().any(|&f| f == ArgumentOptions::STORE_TRUE){
-                    data = Some(Contents::Bool(false));
-                }
-                else if opt.iter().any(|&f| f == ArgumentOptions::STORE_FALSE) {
-                    data = Some(Contents::Bool(true));
-                }
+        let mut options = match options_ {
+            Some(c) => c.iter().map(|&f| String::from(f)).collect(),
+            None => vec![]
+        };
+
+        if data_type == ContentsTypes::Bool
+        {
+            if options.contains(&ArgumentOptions::STORE_TRUE.to_owned()){
+                data = Some(Contents::Bool(false));
+            }
+            else if options.contains(&ArgumentOptions::STORE_FALSE.to_owned()) {
+                data = Some(Contents::Bool(true));
             }
         }
+        let argument_type = Argument::get_type(name);
+        match argument_type {
+            Some(t) => {
+                match t {
+                    ArgumentType::Flag => {
+                        // Do nothing
+                    },
+                    ArgumentType::Postional => {
+                        // Add the necesary option if not already
+                        if !options.contains(&ArgumentOptions::NECESSARY.to_owned()) {
+                                options.push(ArgumentOptions::NECESSARY.to_owned());
+                        }
+                    },
+                }
+
+            },
+            None => {},
+        }
+
+        let arg_name = match Argument::parse_name(name) {
+            Some(n) => { n },
+            None => { name.into() },
+        };
+        
         self.arguments.push(Argument {
-            name: name.to_string(), 
+            name: arg_name, 
             data_type,
             data: data,
-            options: match options_ {
-                Some(c) => c.iter().map(|&f| String::from(f)).collect(),
-                None => vec![]
-            },
+            options: options,
             parsed: false
         });
     }

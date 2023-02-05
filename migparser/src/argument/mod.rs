@@ -1,4 +1,5 @@
 mod contents;
+
 pub use contents::{ContentsTypes, ExtractFromContents};
 pub use contents::Contents;
 
@@ -32,5 +33,43 @@ impl Argument {
     pub fn set_parsed(&mut self) {
         self.parsed = true;
     }
+
+    pub fn get_type(name: &str) -> Option<ArgumentType> {
+        if name.is_empty() {
+            return None;
+        }
+
+        let is_flag = name.starts_with("-");
+
+        if is_flag {
+            return Some(ArgumentType::Flag);
+        }
+        else {
+            return Some(ArgumentType::Postional);
+        }
+    }
     
+    pub fn parse_name(name: &str) -> Option<String> {
+        if name.is_empty() {
+            return None;
+        }
+
+        let mut ret_name: String = name.clone().into(); 
+        loop {
+            let minus_start = ret_name.starts_with("-");
+            if minus_start {
+                ret_name = ret_name.strip_prefix("-").unwrap().into();
+            }
+            else {
+                break;
+            }
+        }
+
+        Some(ret_name)
+    }
+}
+
+pub enum ArgumentType {
+    Postional,
+    Flag,    
 }

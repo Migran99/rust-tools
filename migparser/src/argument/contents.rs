@@ -11,7 +11,8 @@ pub enum Contents {
     Int(i32),
     Uint(u32),
     String(String),
-    Bool(bool)
+    Bool(bool),
+    Float(f32)
 }
 impl Contents {
     pub fn get_value_str(&self) -> String{
@@ -20,6 +21,7 @@ impl Contents {
             Contents::Int(c) => c.to_string(),
             Contents::Uint(c) => c.to_string(),
             Contents::String(c) => c.to_string(),
+            Contents::Float(c) => c.to_string(),
         }
     }
     pub fn get_value<T: ExtractFromContents>(&self) -> Option<T> {
@@ -72,6 +74,15 @@ impl ExtractFromContents for String {
     fn extract(object: &Contents) -> Option<Self> {
         match object {
             Contents::String(i) => {Some(i.to_owned())},
+            _ => None
+        }
+    }
+}
+
+impl ExtractFromContents for f32 {
+    fn extract(object: &Contents) -> Option<Self> {
+        match object {
+            Contents::Float(i) => {Some(i.to_owned())},
             _ => None
         }
     }
