@@ -39,5 +39,5 @@ fn main () {
 
 Run it
 ```bash
-cargo run name miguel --number 8 flag
+cargo run name miguel --number 8 --flag
 ```

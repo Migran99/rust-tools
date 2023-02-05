@@ -14,6 +14,7 @@ pub mod ArgumentOptions {
 #[derive(Clone)]
 pub struct Argument {
     pub name: String,
+    pub cl_name: String,
     pub data_type: ContentsTypes,
     pub data: Option<Contents>,
     pub options: Vec<String>,

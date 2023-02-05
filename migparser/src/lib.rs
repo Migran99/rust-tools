@@ -45,6 +45,7 @@ impl ArgumentParser {
                         if !options.contains(&ArgumentOptions::NECESSARY.to_owned()) {
                                 options.push(ArgumentOptions::NECESSARY.to_owned());
                         }
+
                     },
                 }
 
@@ -56,9 +57,11 @@ impl ArgumentParser {
             Some(n) => { n },
             None => { name.into() },
         };
+        let cl_name = name.to_owned(); // keeping --arg if present
         
         self.arguments.push(Argument {
-            name: arg_name, 
+            name: arg_name,
+            cl_name, 
             data_type,
             data: data,
             options: options,
@@ -115,7 +118,7 @@ impl ArgumentParser {
 
         for opt in self.arguments.iter_mut() {
             for (i,arg) in arguments.iter().enumerate() {
-                if opt.name == *arg && !used_arguments[i] {
+                if opt.cl_name == *arg && !used_arguments[i] {
                     // Get value
                     used_arguments[i] = true;
 
