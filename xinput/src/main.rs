@@ -11,7 +11,8 @@ use tui::Terminal;
 
 use tui::backend::Backend;
 use tui::widgets::Paragraph;
-use tui::widgets::{Block, Borders, Tabs, Text};
+use tui::widgets::{Block, Borders, Tabs};
+use tui::text::{Span, Spans};
 
 const N_CONTROLLERS: u32 = 5;
 
@@ -81,9 +82,15 @@ fn get_controllers_state(handle: &xi::XInputHandle) -> Vec<ControllerState> {
     states_vec
 }
 
+fn get_spans_from_state<'a>(state: &'a ControllerState, color : &Color) -> Vec<Spans<'a>> {
+    state.state_txt.lines()
+            .map(|f| Spans::from(Span::styled(f, Style::default().fg(color.to_owned()))))
+            .collect()
+}
+
 fn draw_ui<B: Backend>(terminal: &mut Terminal<B>, states: Vec<ControllerState>, id: u32) {
     terminal
-        .draw(|mut f| {
+        .draw(|f| {
             let size = f.size();
             let chunks = Layout::default()
                 .direction(Direction::Vertical)
@@ -92,7 +99,6 @@ fn draw_ui<B: Backend>(terminal: &mut Terminal<B>, states: Vec<ControllerState>,
                 .split(size);
 
             let state = &states[usize::try_from(id).unwrap()];
-            let v = vec![Text::raw(state.state_txt.to_owned())];
             let title = format!("Controller ID ({}) State", id);
             let title_color = if state.connected {
                 Color::LightGreen
@@ -101,18 +107,25 @@ fn draw_ui<B: Backend>(terminal: &mut Terminal<B>, states: Vec<ControllerState>,
             };
 
 
+            // let inner_text = vec![
+            //     Spans::from(
+            //         Span::styled(state.state_txt.to_owned(), Style::default().fg(title_color))
+            //     )];
+
+            let inner_text = get_spans_from_state(&state, &title_color);
+
+
             let mut titles: Vec<String> = Vec::new();
             for i in 0..N_CONTROLLERS{
                 titles.push(format!("Controller {}", i));
             }
-            let tabs = Tabs::default()
-                .titles(&titles)
+            let tabs = Tabs::new(titles.iter().cloned().map(Spans::from).collect())
                 .block(Block::default().borders(Borders::ALL).title("Tabs"))
                 .select(id.try_into().unwrap())
                 .style(Style::default().fg(Color::Cyan))
                 .highlight_style(
                     Style::default()
-                        .modifier(Modifier::BOLD)
+                        .add_modifier(Modifier::BOLD)
                         .bg(title_color)
                         .fg(Color::Black)
                 );
@@ -120,13 +133,12 @@ fn draw_ui<B: Backend>(terminal: &mut Terminal<B>, states: Vec<ControllerState>,
 
 
 
-            let p = Paragraph::new(v.iter())
+            let p = Paragraph::new(inner_text)
                 .block(
                     Block::default()
                         .borders(Borders::ALL)
                         .style(Style::default().fg(Color::White))
                         .title(title.as_str())
-                        .title_style(Style::default().fg(title_color)),
                 )
                 .style(Style::default().fg(Color::LightCyan));
             f.render_widget(p, chunks[1])
