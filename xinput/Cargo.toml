@@ -5,6 +5,11 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[bin]]
+name = "xintool"
+test = false
+bench = false
+
 [dependencies]
 rusty-xinput = "1.2.0"
 crossterm = "0.17"
