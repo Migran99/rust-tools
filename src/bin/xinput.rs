@@ -1,5 +1,6 @@
 use xinput::run_app;
 
+
 fn main() {
-    run_app();    
+    run_app();
 }
