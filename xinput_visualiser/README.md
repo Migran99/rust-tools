@@ -15,6 +15,13 @@
 > xintool
 ```
 
+Or directly from crates.io
+
+```bash
+> cargo install xinput-visualiser
+> xintool
+```
+
 And navigate through the tabs with the `p` (previous) and `n` (next) key on the keyboard.
 
 ## Connected
