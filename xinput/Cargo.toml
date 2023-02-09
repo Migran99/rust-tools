@@ -2,6 +2,11 @@
 name = "xinput"
 version = "0.1.0"
 edition = "2021"
+authors = ["Miguel Granero"]
+description = "Simple XInput controller tool to check the input state."
+license = "BSD-3-Clause"
+keywords = ["xinput", "controller", "xbox"]
+repository = "https://github.com/Migran99/rust-tools/tree/main/xinput"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
