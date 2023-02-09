@@ -5,7 +5,7 @@ edition = "2021"
 default-run = "main"
 
 [workspace]
-members = ["csv_file", "migformatting", "migparser", "text_file", "xinput"]
+members = ["csv_file", "migformatting", "migparser", "text_file", "xinput_visualiser"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 default-run = "rust_tools"
@@ -15,4 +15,4 @@ text_file = { path = "./text_file" }
 csv_file = { path = "./csv_file" }
 migformatting = "0.1.0"
 migparser = { path = "./migparser"}
-xinput = { path = "./xinput"}
+xinput_visualiser = { path = "./xinput_visualiser"}

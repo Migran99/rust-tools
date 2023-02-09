@@ -1,12 +1,12 @@
 [package]
-name = "xinput"
+name = "xinput_visualiser"
 version = "0.1.0"
 edition = "2021"
 authors = ["Miguel Granero"]
 description = "Simple XInput controller tool to check the input state."
 license = "BSD-3-Clause"
 keywords = ["xinput", "controller", "xbox"]
-repository = "https://github.com/Migran99/rust-tools/tree/main/xinput"
+repository = "https://github.com/Migran99/rust-tools/tree/main/xinput_visualiser"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
