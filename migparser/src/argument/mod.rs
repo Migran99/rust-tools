@@ -18,7 +18,8 @@ pub struct Argument {
     pub data_type: ContentsTypes,
     pub data: Option<Contents>,
     pub options: Vec<String>,
-    pub parsed: bool
+    pub parsed: bool,
+    pub index: i32,
 }
 impl Argument {
     pub fn get_data(&self) -> Option<Contents>{

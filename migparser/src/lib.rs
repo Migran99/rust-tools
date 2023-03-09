@@ -4,16 +4,23 @@ use migformatting::Formatting;
 mod argument;
 pub use argument::{ContentsTypes, ExtractFromContents, ArgumentOptions, Argument};
 use argument::{Contents, ArgumentType};
+/* TODO
+
+    - Positionals
+    - Shortcuts --car -> -c
+
+ */
 
 pub struct ArgumentParser {
     arguments: Vec<Argument>,
+    positional_cursor: i32,
 }
 
 impl ArgumentParser {
 
     // Instantiation
     pub fn new() -> ArgumentParser {
-        ArgumentParser {arguments: vec![]}
+        ArgumentParser {arguments: vec![], positional_cursor: 0}
     }
 
     // Arguments functions
@@ -24,16 +31,24 @@ impl ArgumentParser {
             None => vec![]
         };
 
+        /* Bool */
         if data_type == ContentsTypes::Bool
         {
-            if options.contains(&ArgumentOptions::STORE_TRUE.to_owned()){
-                data = Some(Contents::Bool(false));
-            }
-            else if options.contains(&ArgumentOptions::STORE_FALSE.to_owned()) {
+            if options.contains(&ArgumentOptions::STORE_FALSE.to_owned()) {
                 data = Some(Contents::Bool(true));
             }
+            else { /* STORE_TRUE by default */
+                data = Some(Contents::Bool(false));
+
+                if !options.contains(&ArgumentOptions::STORE_FALSE.to_owned()) {
+                    options.push(ArgumentOptions::STORE_TRUE.to_owned());
+                }
+            }
         }
+
+        /* Positional - Optional - Flags */
         let argument_type = Argument::get_type(name);
+        let mut index: i32 = -1;
         match argument_type {
             Some(t) => {
                 match t {
@@ -43,9 +58,9 @@ impl ArgumentParser {
                     ArgumentType::Postional => {
                         // Add the necesary option if not already
                         if !options.contains(&ArgumentOptions::NECESSARY.to_owned()) {
-                                options.push(ArgumentOptions::NECESSARY.to_owned());
+                                options.push(ArgumentOptions::NECESSARY.to_owned()); 
                         }
-
+                        index = self.positional_cursor;
                     },
                 }
 
@@ -65,7 +80,8 @@ impl ArgumentParser {
             data_type,
             data: data,
             options: options,
-            parsed: false
+            parsed: false,
+            index: index,
         });
     }
 
@@ -118,10 +134,11 @@ impl ArgumentParser {
 
         for opt in self.arguments.iter_mut() {
             for (i,arg) in arguments.iter().enumerate() {
-                if opt.cl_name == *arg && !used_arguments[i] {
+                if opt.cl_name == *arg && !used_arguments[i] && !opt.parsed {
                     // Get value
                     used_arguments[i] = true;
 
+                    /* TODO: match per data_type */
                     if opt.has_option(ArgumentOptions::STORE_TRUE) && opt.data_type == ContentsTypes::Bool{
                         opt.data = Some(Contents::Bool(true));
                     }
