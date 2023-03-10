@@ -2,8 +2,8 @@ use std::{env};
 use migformatting::Formatting;
 
 mod argument;
-pub use argument::{ContentsTypes, ExtractFromContents, ArgumentOptions, Argument};
-use argument::{Contents, ArgumentType};
+pub use argument::{DataType, ExtractFromContents, ArgumentOptions, Argument};
+use argument::{Content, ArgumentType};
 /* TODO
 
     - Positionals
@@ -24,21 +24,22 @@ impl ArgumentParser {
     }
 
     // Arguments functions
-    pub fn add_argument(&mut self, name: &str, data_type: ContentsTypes ,options_: Option<Vec<&str>>, default_value: Option<Contents>) {
-        let mut data: Option<Contents> = default_value;
+    pub fn add_argument(&mut self, name: &str, data_type: DataType ,options_: Option<Vec<&str>>, default_value: Option<Content>) {
+        /* Set-up*/
+        let mut data: Option<Content> = default_value;
         let mut options = match options_ {
             Some(c) => c.iter().map(|&f| String::from(f)).collect(),
             None => vec![]
         };
 
         /* Bool */
-        if data_type == ContentsTypes::Bool
+        if data_type == DataType::Bool
         {
             if options.contains(&ArgumentOptions::STORE_FALSE.to_owned()) {
-                data = Some(Contents::Bool(true));
+                data = Some(Content::Bool(true));
             }
             else { /* STORE_TRUE by default */
-                data = Some(Contents::Bool(false));
+                data = Some(Content::Bool(false));
 
                 if !options.contains(&ArgumentOptions::STORE_FALSE.to_owned()) {
                     options.push(ArgumentOptions::STORE_TRUE.to_owned());
@@ -55,13 +56,16 @@ impl ArgumentParser {
                     ArgumentType::Optional => {
                         // Do nothing
                     },
-                    ArgumentType::Postional => {
+                    ArgumentType::Positional => {
                         // Add the necesary option if not already
                         if !options.contains(&ArgumentOptions::NECESSARY.to_owned()) {
                                 options.push(ArgumentOptions::NECESSARY.to_owned()); 
                         }
                         index = self.positional_cursor;
                     },
+                    ArgumentType::Flag => {
+
+                    }
                 }
 
             },
@@ -74,15 +78,11 @@ impl ArgumentParser {
         };
         let cl_name = name.to_owned(); // keeping --arg if present
         
-        self.arguments.push(Argument {
-            name: arg_name,
-            cl_name, 
-            data_type,
-            data: data,
-            options: options,
-            parsed: false,
-            index: index,
-        });
+        self.arguments.push(Argument::new_optional(
+                            arg_name.as_str(), 
+                            vec![cl_name], 
+                            data_type, 
+                            Some(options)));
     }
 
     fn parse_text<T: std::str::FromStr>(text: &String) -> Option<T>{
@@ -93,36 +93,45 @@ impl ArgumentParser {
         }
     }
 
-    fn parse_value(text: &String, type_ : &ContentsTypes) -> Option<Contents> {
-        let res: Option<Contents> = match type_ {
-            ContentsTypes::Int => {
+    fn parse_value(text: &String, type_ : &DataType) -> Option<Content> {
+        let res: Option<Content> = match type_ {
+            DataType::Int => {
                 let parsed = ArgumentParser::parse_text::<i32>(text);
                 if let Some(c) = parsed{
-                    return Some(Contents::Int(c));
+                    return Some(Content::Int(c));
                 }
                 else {
                     return None;
                 }
             },
-            ContentsTypes::Uint => {
+            DataType::Uint => {
                 let parsed = ArgumentParser::parse_text::<u32>(text);
                 if let Some(c) = parsed{
-                    return Some(Contents::Uint(c));
+                    return Some(Content::Uint(c));
                 }
                 else {
                     return None;
                 }
             },
-            ContentsTypes::Bool => {
+            DataType::Bool => {
                 let parsed = ArgumentParser::parse_text::<bool>(text);
                 if let Some(c) = parsed{
-                    return Some(Contents::Bool(c));
+                    return Some(Content::Bool(c));
                 }
                 else {
                     return None;
                 }
             },
-            ContentsTypes::String => Some(Contents::String(text.clone())),
+            DataType::String => Some(Content::String(text.clone())),
+            DataType::Float => {
+                let parsed = ArgumentParser::parse_text::<f32>(text);
+                if let Some(c) = parsed{
+                    return Some(Content::Float(c));
+                }
+                else {
+                    return None;
+                }
+            },
         };
 
         res
@@ -134,20 +143,22 @@ impl ArgumentParser {
 
         for opt in self.arguments.iter_mut() {
             for (i,arg) in arguments.iter().enumerate() {
-                if opt.cl_name == *arg && !used_arguments[i] && !opt.parsed {
+                if opt.has_identifier(arg) && !used_arguments[i] && !opt.is_parsed() {
                     // Get value
                     used_arguments[i] = true;
 
                     /* TODO: match per data_type */
-                    if opt.has_option(ArgumentOptions::STORE_TRUE) && opt.data_type == ContentsTypes::Bool{
-                        opt.data = Some(Contents::Bool(true));
+                    if opt.has_option(ArgumentOptions::STORE_TRUE) && opt.data_type == DataType::Bool{
+                        opt.set_data(Content::Bool(true));
                     }
-                    else if opt.has_option(ArgumentOptions::STORE_FALSE) && opt.data_type == ContentsTypes::Bool {
-                        opt.data = Some(Contents::Bool(false));
+                    else if opt.has_option(ArgumentOptions::STORE_FALSE) && opt.data_type == DataType::Bool {
+                        opt.set_data(Content::Bool(false));
                     }
                     else {
                         let data = ArgumentParser::parse_value(&arguments[i+1], &opt.data_type);
-                        opt.data = data;
+                        if let Some(d) = data {
+                            opt.set_data(d);
+                        }
                         used_arguments[i+1] = true;
                     }
 
@@ -162,7 +173,7 @@ impl ArgumentParser {
     }
 
     pub fn get_value<T: ExtractFromContents>(&self, arg: &str) -> Option<T>{
-        let mut ret: Option<Contents> = None;
+        let mut ret: Option<Content> = None;
         for a in self.arguments.iter() {
             if &a.name == arg {
                 ret = a.get_data();
@@ -181,7 +192,7 @@ impl ArgumentParser {
     pub fn print_data(&self) {
         println!("##### Arguments");
         for d in self.arguments.iter() {
-            let data = if let Some(c) = &d.data {
+            let data = if let Some(c) = d.get_data() {
                 c.get_value_str()
             }
             else {

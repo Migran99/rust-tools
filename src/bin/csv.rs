@@ -2,14 +2,14 @@ use csv_file::CsvFile;
 use migformatting::Formatting;
 use text_file;
 
-use migparser::{ArgumentOptions, ArgumentParser, ContentsTypes};
+use migparser::{ArgumentOptions, ArgumentParser, DataType};
 
 fn main() {
 
     // Arguments configuration
     let mut parser = ArgumentParser::new();
 
-    parser.add_argument("path", ContentsTypes::String, 
+    parser.add_argument("path", DataType::String, 
                 Some(vec![ArgumentOptions::NECESSARY]), None);
     parser.parse_arguments();
 

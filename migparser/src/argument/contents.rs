@@ -4,85 +4,95 @@
 /// Any new types in Contents enum should also implement this trait.
 
 // Supported types
+#[derive(Debug)]
+#[derive(Clone)]
+#[derive(PartialEq)]
+pub enum DataType {
+    Int,
+    Uint,
+    String,
+    Bool,
+    Float,
+}
+
 #[derive(Clone)]
 #[derive(Debug)]
 #[derive(PartialEq)]
-pub enum Contents {
+pub enum Content {
     Int(i32),
     Uint(u32),
     String(String),
     Bool(bool),
     Float(f32)
 }
-impl Contents {
+impl Content {
     pub fn get_value_str(&self) -> String{
         match self {
-            Contents::Bool(c) => c.to_string(),
-            Contents::Int(c) => c.to_string(),
-            Contents::Uint(c) => c.to_string(),
-            Contents::String(c) => c.to_string(),
-            Contents::Float(c) => c.to_string(),
+            Content::Bool(c) => c.to_string(),
+            Content::Int(c) => c.to_string(),
+            Content::Uint(c) => c.to_string(),
+            Content::String(c) => c.to_string(),
+            Content::Float(c) => c.to_string(),
         }
     }
     pub fn get_value<T: ExtractFromContents>(&self) -> Option<T> {
         T::extract(self)
     }
+    pub fn get_type(&self) -> DataType {
+        match self {
+            Content::Bool(c) => DataType::Bool,
+            Content::Int(c) => DataType::Int,
+            Content::Uint(c) => DataType::Uint,
+            Content::String(c) => DataType::String,
+            Content::Float(c) => DataType::Float,
+        }
+    }
 }
-#[derive(Debug)]
-#[derive(Clone)]
-#[derive(PartialEq)]
-pub enum ContentsTypes {
-    Int,
-    Uint,
-    String,
-    Bool
-}
-
 
 pub trait ExtractFromContents {
-    fn extract(object: &Contents) -> Option<Self> where Self: Sized;
+    fn extract(object: &Content) -> Option<Self> where Self: Sized;
 }
 
 impl ExtractFromContents for i32 {
-    fn extract(object: &Contents) -> Option<Self> {
+    fn extract(object: &Content) -> Option<Self> {
         match object {
-            Contents::Int(i) => {Some(i.to_owned())},
+            Content::Int(i) => {Some(i.to_owned())},
             _ => None
         }
     }
 }
 
 impl ExtractFromContents for bool {
-    fn extract(object: &Contents) -> Option<Self> {
+    fn extract(object: &Content) -> Option<Self> {
         match object {
-            Contents::Bool(i) => {Some(i.to_owned())},
+            Content::Bool(i) => {Some(i.to_owned())},
             _ => None
         }
     }
 }
 
 impl ExtractFromContents for u32 {
-    fn extract(object: &Contents) -> Option<Self> {
+    fn extract(object: &Content) -> Option<Self> {
         match object {
-            Contents::Uint(i) => {Some(i.to_owned())},
+            Content::Uint(i) => {Some(i.to_owned())},
             _ => None
         }
     }
 }
 
 impl ExtractFromContents for String {
-    fn extract(object: &Contents) -> Option<Self> {
+    fn extract(object: &Content) -> Option<Self> {
         match object {
-            Contents::String(i) => {Some(i.to_owned())},
+            Content::String(i) => {Some(i.to_owned())},
             _ => None
         }
     }
 }
 
 impl ExtractFromContents for f32 {
-    fn extract(object: &Contents) -> Option<Self> {
+    fn extract(object: &Content) -> Option<Self> {
         match object {
-            Contents::Float(i) => {Some(i.to_owned())},
+            Content::Float(i) => {Some(i.to_owned())},
             _ => None
         }
     }
