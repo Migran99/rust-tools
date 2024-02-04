@@ -1,0 +1,4 @@
+{
+    "rust-analyzer.hover.actions.gotoTypeDef.enable": false,
+    "rust-analyzer.inlayHints.typeHints.enable": false
+}

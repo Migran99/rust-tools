@@ -5,10 +5,10 @@ edition = "2021"
 default-run = "main"
 
 [workspace]
-members = ["csv_file", "migformatting", "migparser", "text_file"]
+members = ["csv_file", "migformatting", "text_file"]
 
 [dependencies]
 text_file = { path = "./text_file" }
 csv_file = { path = "./csv_file" }
 migformatting = "0.1.0"
-migparser = { path = "./migparser"}
+migparser = "0.2.1"

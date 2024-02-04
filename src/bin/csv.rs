@@ -2,27 +2,25 @@ use csv_file::CsvFile;
 use migformatting::Formatting;
 use text_file;
 
-use migparser::{ArgumentOptions, ArgumentParser, DataType};
+use migparser::{ArgumentParser, DataType};
 
-fn main() {
-
+fn main() -> Result<(), String> {
     // Arguments configuration
     let mut parser = ArgumentParser::new();
 
-    parser.add_argument("path", DataType::String, 
-                Some(vec![ArgumentOptions::NECESSARY]), None);
+    parser.add_argument("path", None, DataType::String, None, None)?;
     parser.parse_arguments();
 
     let filename = match parser.get_value::<String>("path") {
         Some(f) => f,
         None => {
-            println!("{}",String::from("you need to give a filepath!!").error());
+            println!("{}", String::from("you need to give a filepath!!").error());
             std::process::exit(0);
         }
     };
 
     // CSV Example
-    
+
     let mut my_file = text_file::TextFile::new(&filename).unwrap();
 
     println!("File {} size in Bytes: {}", my_file.name(), my_file.len());
@@ -36,7 +34,7 @@ fn main() {
     let keys = mycsv.get_keys();
     println!("{keys:?}");
 
-    let keys_pairs= mycsv.get_key_pairs();
+    let keys_pairs = mycsv.get_key_pairs();
     println!("{keys_pairs:?}");
 
     mycsv.display();
@@ -57,13 +55,14 @@ fn main() {
     mycsv.add_key("new_key");
     mycsv.display();
 
-    let keys_pairs= mycsv.get_key_pairs();
+    let keys_pairs = mycsv.get_key_pairs();
     println!("{keys_pairs:?}");
 
     mycsv.set_key_value("new_key", 2, "test");
 
     mycsv.display();
 
+    println!("{}", format!("Done!").valid());
 
-    println!("{}",format!("Done!").valid())
+    return Ok(());
 }
